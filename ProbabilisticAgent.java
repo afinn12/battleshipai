@@ -10,7 +10,7 @@ import edu.bu.battleship.game.Game.GameView;
 import edu.bu.battleship.game.EnemyBoard;
 import edu.bu.battleship.game.EnemyBoard.Outcome;
 import edu.bu.battleship.utils.Coordinate;
-import edu.bu.battleship.game.PlayerView;
+//import edu.bu.battleship.game.PlayerView;
 
 
 public class ProbabilisticAgent
@@ -29,14 +29,16 @@ public class ProbabilisticAgent
         Random rand = new Random();
         //System.out.println(game.getEnemyShipTypeToNumRemaining());
 
+
         //find size of board to use
-        int max = 0;
-        while(game.isInBounds(max+1, max+1)){
-            max++;
-        }
+        int max = game.getGameConstants().getNumCols();
+        
+        //finds ship types and associated num remaining
+        System.out.println(game.getGameConstants().getShipTypeToPopulation()+"\n\n");
 
-
+        //find outcome 2d array
         Outcome[][] result = game.getEnemyBoardView();
+        
        
         //pick random coordinate until not attacked yet
         int x = rand.nextInt(max);
