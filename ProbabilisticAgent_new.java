@@ -1,53 +1,69 @@
-import java.util.Map;
-import java.util.HashMap;
-import edu.bu.battleship.game.Constants;
+package src.pas.battleship.agents;
+
+
+// SYSTEM IMPORTS
+import java.util.*;
+
+// JAVA PROJECT IMPORTS
+import edu.bu.battleship.agents.Agent;
 import edu.bu.battleship.game.Game.GameView;
 import edu.bu.battleship.game.EnemyBoard;
 import edu.bu.battleship.game.EnemyBoard.Outcome;
 import edu.bu.battleship.utils.Coordinate;
+//import edu.bu.battleship.game.PlayerView;
+import edu.bu.battleship.game.Constants;
+import edu.bu.battleship.game.Constants.Ship;
 
-public class ProbabilisticAgent extends Agent {
+import java.util.Map;
+import java.util.HashMap;
 
-    public ProbabilisticAgent(String name) {
+
+public class ProbabilisticAgent 
+    extends Agent 
+{
+
+    public ProbabilisticAgent(String name) 
+    {
         super(name);
         System.out.println("[INFO] ProbabilisticAgent.ProbabilisticAgent: constructed agent");
     }
 
     @Override
-    public Coordinate makeMove(final GameView game) {
-        // Get the size of the board
+    public Coordinate makeMove(final GameView game) 
+    {
+        //find size of board to use
         int max = game.getGameConstants().getNumCols();
         
-        // Initialize probabilities for each cell
+        //initialize probabilities for each cell
         double[][] probabilities = new double[max][max];
         
-        // Iterate through all squares
+        //iterate over each cell
         for (int x = 0; x < max; x++) {
             for (int y = 0; y < max; y++) {
-                // If the square has been attacked, probability is 0
+                //if cell was attacked, prob = 0
                 if (!game.isInBounds(x, y) || !game.getEnemyBoardView()[x][y].equals(Outcome.UNKNOWN)) {
                     probabilities[x][y] = 0.0;
                 } else {
-                    // Calculate probability for each ship type
+                    //calculate prob for each ship type
                     for (Constants.Ship.ShipType shipType : Constants.Ship.ShipType.values()) {
                         int shipSize = Constants.Ship.getShipSize(shipType);
                         double prob = calculateProbability(game, x, y, shipSize);
-                        // Update the probability for the cell
+                        //update prob for cell
                         probabilities[x][y] += prob;
                     }
                 }
             }
         }
         
-        // Find the coordinate with the highest probability
+        //find coord with highest prob
         Coordinate highestProbabilityCoord = findHighestProbabilityCoordinate(probabilities);
 
         return highestProbabilityCoord;
     }
 
-    // Helper method to calculate the probability for a specific ship size at a given coordinate
+    // Helper method to calc the prob for a specific ship size at a given coordinate
     private double calculateProbability(GameView game, int x, int y, int shipSize) {
-        // Count the number of empty squares around the given coordinate
+        //count number of empty squares around the given coordinate
         int emptyCount = 0;
         for (int i = x - shipSize + 1; i <= x; i++) {
             if (i >= 0 && i < game.getGameConstants().getNumCols() && game.isInBounds(i, y) && game.getEnemyBoardView()[i][y] == Outcome.UNKNOWN) {
@@ -60,7 +76,7 @@ public class ProbabilisticAgent extends Agent {
             }
         }
         
-        // Calculate probability based on the number of empty squares
+        //calc prob based on number of empty squares
         double prob = (double) emptyCount / (2 * shipSize);
         return prob;
     }
@@ -79,7 +95,6 @@ public class ProbabilisticAgent extends Agent {
                 }
             }
         }
-
         return maxProbabilityCoord;
     }
 
