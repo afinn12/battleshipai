@@ -11,8 +11,8 @@ import edu.bu.battleship.game.EnemyBoard;
 import edu.bu.battleship.game.EnemyBoard.Outcome;
 import edu.bu.battleship.utils.Coordinate;
 //import edu.bu.battleship.game.PlayerView;
-import edu.bu.battleship.game.Ship;
 import edu.bu.battleship.game.Constants;
+import edu.bu.battleship.game.Constants.Ship;
 
 
 public class ProbabilisticAgent
